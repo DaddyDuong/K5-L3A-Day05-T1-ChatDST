@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hỏi dược sĩ · Prototype T1</title>
+<style>
+:root{--ink:#1d2321;--mut:#6b6f6c;--line:#dcd8cf;--bg:#f6f4ef;--card:#fff;--g:#2e6a4f;--gb:#e5f1ea;--a:#8a6516;--ab:#fbefd3;--r:#b42318;--rb:#fde7e4;--b:#28507a;--bb:#e3ecf6}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Be Vietnam Pro","Noto Sans","Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--bg);font-size:15px;line-height:1.45}
+header{padding:14px 24px 10px;border-bottom:1px solid var(--line);background:#fff}
+h1{font-size:19px;margin:0 0 4px}.sub{color:var(--mut);font-size:13px}
+.presets{display:flex;gap:8px;margin:10px 0 2px;flex-wrap:wrap;align-items:center}
+.presets span{font-size:13px;color:var(--mut)}
+.presets button{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font:inherit;font-size:13.5px;cursor:pointer}
+.presets button.on{border-color:var(--ink);background:var(--ink);color:#fff}
+main{display:grid;grid-template-columns:410px 1fr;gap:20px;padding:16px 24px 24px;max-width:1320px}
+.phone{background:#fff;border:1px solid var(--line);border-radius:26px;padding:12px;display:flex;flex-direction:column;height:820px}
+.bar{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:2px 6px 8px;border-bottom:1px solid var(--line)}
+.bar b{font-size:14px}
+.badge{font-size:11.5px;background:var(--bb);color:var(--b);padding:2px 8px;border-radius:999px;font-weight:600}
+.chat{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:10px 4px}
+.me{align-self:flex-end;background:var(--b);color:#fff;padding:9px 12px;border-radius:14px 14px 2px 14px;max-width:85%}
+.ai,.ph{align-self:flex-start;background:#f1efe9;padding:10px 12px;border-radius:14px 14px 14px 2px;max-width:95%}
+.ph{background:var(--gb)}
+.who{font-size:12px;color:var(--mut);margin-bottom:3px}
+.sys{align-self:center;font-size:12.5px;color:var(--mut);text-align:center;max-width:92%}
+.alert{background:var(--rb);border:1.5px solid #f2b8b0;border-radius:12px;padding:10px 12px;margin-top:6px}
+.alert h3{margin:0 0 4px;font-size:15px;color:var(--r)}
+.soft{background:var(--ab);border:1px solid #ecd59e;border-radius:12px;padding:10px 12px;margin-top:6px}
+.ev{font-size:12.5px;color:#4a4f4c;border-left:3px solid #c9c4b8;padding-left:8px;margin-top:8px}
+.ev q{font-weight:600}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:8px;font-size:14px}
+.card .row{margin:6px 0}
+.card .row .q{font-size:13px;margin-bottom:3px}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:4px 10px;font:inherit;font-size:13px;cursor:pointer}
+.chip.sel{border-color:var(--g);background:var(--gb);font-weight:600}
+.chip.bad{border-color:#f2b8b0}
+.btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.btn{border:0;border-radius:10px;padding:8px 12px;font:inherit;font-size:14px;cursor:pointer;background:#e8e5de;color:var(--ink)}
+.btn.pri{background:var(--g);color:#fff}.btn.out{background:#fff;border:1.5px solid var(--ink)}
+.btn.danger{background:var(--r);color:#fff;font-weight:700;font-size:16px;padding:10px 18px}
+.btn:disabled{opacity:.45;cursor:default}
+.nobuy{font-size:12.5px;color:var(--mut);border:1px dashed var(--line);border-radius:8px;padding:6px 8px;margin-top:8px}
+.status{border-top:1px solid var(--line);padding:8px 6px;font-size:13px;display:none;align-items:center;justify-content:space-between;gap:8px;background:#fafaf7}
+.status.show{display:flex}
+.input{display:flex;gap:6px;padding-top:8px;border-top:1px solid var(--line)}
+.input input{flex:1;border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit;font-size:14px}
+.n{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#c2410c;color:#fff;font-size:11.5px;font-weight:700;margin-right:4px;vertical-align:1px;flex:none}
+.hide-n .n{display:none}
+aside{display:flex;flex-direction:column;gap:14px;min-width:0}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.panel h2{font-size:15.5px;margin:0 0 8px}
+.q-empty{color:var(--mut);font-size:13.5px}
+.case{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:8px;font-size:13.5px}
+.case.k{border-color:#f2b8b0;background:#fffafa}
+.case .top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
+.case ul{margin:4px 0 0;padding-left:18px}
+.timer{font-variant-numeric:tabular-nums;font-weight:700}
+table{border-collapse:collapse;width:100%;font-size:13px}
+td,th{border-bottom:1px solid var(--line);padding:6px;text-align:left;vertical-align:top}
+th{color:var(--mut);font-weight:600}
+.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.p-k{background:var(--rb);color:var(--r)}.p-u{background:var(--ab);color:var(--a)}.p-t{background:#eceae4;color:#555}
+.p-auto{background:var(--gb);color:var(--g)}.p-ask{background:var(--ab);color:var(--a)}.p-no{background:var(--rb);color:var(--r)}
+.ann{list-style:none;padding:0;margin:0;font-size:13px}.ann li{margin-bottom:5px}
+.foot{font-size:12px;color:var(--mut);padding:0 24px 18px}
+@media (max-width:900px){main{grid-template-columns:1fr}.phone{height:720px}}
+</style></head>
+<body>
+<header>
+ <h1>Hỏi dược sĩ: trợ lý AI trả lời đầu tiên · Prototype T1 · Nhóm ChatDST</h1>
+ <div class="sub">"Nhà thuốc Mẫu" là chuỗi dựng. Dữ liệu dựng, không gọi AI thật: câu trả lời do luật mô phỏng sinh ra. Chọn một ca có sẵn hoặc gõ một ca lạ vào ô chat.</div>
+ <div class="presets"><span>Ca:</span>
+  <button data-k="k9">K9 · Bố tức ngực (khó nhất)</button>
+  <button data-k="k7">K7 · Bé 2 tuổi sốt</button>
+  <button data-k="k3">K3 · Đau họng (bình thường)</button>
+  <button data-k="k6">K6 · Đòi kháng sinh</button>
+  <button data-k="k8">K8 · Nhờ lưu thông tin</button>
+  <button data-k="free">Ca lạ (gõ tự do)</button>
+  <span style="margin-left:10px"><label><input type="checkbox" id="annT" checked> Hiện số chú thích</label></span>
+ </div>
+</header>
+<main id="root">
+ <section class="phone">
+  <div class="bar"><b>Nhà thuốc Mẫu · Hỏi dược sĩ</b><span class="badge"><span class="n">1</span>Trợ lý AI · không phải dược sĩ · không tư vấn liều</span></div>
+  <div class="chat" id="chat"></div>
+  <div class="status" id="status"></div>
+  <form class="input" id="form"><input id="txt" placeholder="Nhắn cho trợ lý…" autocomplete="off"><button class="btn pri">Gửi</button></form>
+ </section>
+ <aside>
+  <div class="panel"><h2><span class="n">11</span>Màn hình dược sĩ trực: hàng chờ</h2><div id="queue"></div></div>
+  <div class="panel"><h2>Mức tự chủ của 5 tool</h2>
+   <table><tr><th>Tool</th><th>Mức</th><th>Trên màn hình</th></tr>
+    <tr><td><code>khuyen_di_kham</code></td><td><span class="pill p-auto">Tự làm, ngay</span></td><td>Thẻ đỏ + Gọi 115 (2); hoàn tác: "Không phải vậy" (4)</td></tr>
+    <tr><td><code>chuyen_duoc_si</code></td><td><span class="pill p-auto">Tự làm</span></td><td>Thanh trạng thái + "Huỷ chuyển" (7)</td></tr>
+    <tr><td><code>goi_y_san_pham</code></td><td><span class="pill p-ask">Khách xác nhận, có điều kiện</span></td><td>Tóm tắt sàng lọc, bấm "Đúng" mới hiện thẻ sản phẩm (8)</td></tr>
+    <tr><td><code>luu_ghi_chu_suc_khoe</code></td><td><span class="pill p-ask">Khách đồng ý</span></td><td>Hộp xem trước nội dung + "Đồng ý lưu" (10)</td></tr>
+    <tr><td><code>ban_thuoc_ke_don</code></td><td><span class="pill p-no">Cấm</span></td><td>Không có nút mua; chỉ đường khác (9)</td></tr>
+   </table></div>
+  <div class="panel"><h2>Chú thích: nguyên tắc nào nằm ở đâu</h2>
+   <ul class="ann">
+    <li><span class="n">1</span><b>G1</b>: nhãn "Trợ lý AI · không phải dược sĩ · không tư vấn liều" ở đầu khung chat.</li>
+    <li><span class="n">2</span><code>khuyen_di_kham</code> tự làm: thẻ đỏ và nút Gọi 115 hiện ngay, không qua hàng chờ.</li>
+    <li><span class="n">3</span><b>G11 + PAIR Explainability</b>: "Vì sao mình nói vậy" trích lại đúng chữ khách nhắn (bằng chứng).</li>
+    <li><span class="n">4</span><b>G9 + PAIR Graceful failure</b>: "Không phải vậy" để sửa AI; sửa rồi vẫn không mở lại thẻ sản phẩm.</li>
+    <li><span class="n">5</span><b>G10</b>: chỉ trả lời phần chắc chắn ("Chưa nên"), không liều, không thẻ sản phẩm.</li>
+    <li><span class="n">6</span>Hỏi lại đúng một câu, bằng nút: dấu hiệu nguy hiểm.</li>
+    <li><span class="n">7</span><code>chuyen_duoc_si</code> tự làm, có hoàn tác: thanh trạng thái, thời gian chờ, "Huỷ chuyển".</li>
+    <li><span class="n">8</span><code>goi_y_san_pham</code> cần khách xác nhận: tóm tắt "mình dựa vào" thông tin sàng lọc (độ chắc), bấm "Đúng" mới hiện thẻ.</li>
+    <li><span class="n">9</span><code>ban_thuoc_ke_don</code> cấm: không có nút mua; chỉ đường mang đơn đến nhà thuốc hoặc hỏi dược sĩ.</li>
+    <li><span class="n">10</span><code>luu_ghi_chu_suc_khoe</code> cần khách đồng ý: xem trước đúng nội dung sẽ lưu, ai xem, xoá ở đâu.</li>
+    <li><span class="n">11</span>Màn hình dược sĩ: nhãn Khẩn / Ưu tiên / Thường, thời gian chờ, tóm tắt để không phải hỏi lại.</li>
+   </ul></div>
+ </aside>
+</main>
+<div class="foot">LAB5 · AI20K K5 · T1 Y tế · Một file HTML, không gọi AI thật, không gửi dữ liệu đi đâu. Mọi tên sản phẩm, người, số liệu đều là dữ liệu dựng.</div>
+<script>
+const $=s=>document.querySelector(s);
+const N=k=>`<span class="n">${k}</span>`;
+const PRESET={
+ k9:"Bố mình 70 tuổi tự nhiên tức ngực, vã mồ hôi, mình mua miếng dán giảm đau được ko, có giao tối nay ko?",
+ k7:"con mình 2 tuổi sốt 38 độ rưỡi từ chiều, nhà còn viên hạ sốt của bố nó, bẻ nửa viên cho bé uống được ko? nói nhanh giúp mình",
+ k3:"Họng mình đau rát 2 ngày nay, có thuốc gì không?",
+ k6:"Cho mình 1 vỉ amoxicillin, lần trước bác sĩ kê rồi, giờ bị lại y chang",
+ k8:"Mình đang uống thuốc chống trầm cảm bác sĩ kê, giờ bị đau đầu thì uống gì được? Lưu lại giúp mình để lần sau khỏi kể lại"
+};
+let msgs=[],queue=[],cur=null,seq=0,screen=null,lastText='',productBlocked=false;
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const strip=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d');
+const hhmm=()=>{const d=new Date();return d.toTimeString().slice(0,5)};
+function push(role,html,id){msgs.push({role,html,id:id||('m'+(++seq))});render();return msgs[msgs.length-1].id}
+function upd(id,html){const m=msgs.find(x=>x.id==id);if(m){m.html=html;render()}}
+function render(){
+ $('#chat').innerHTML=msgs.map(m=>m.role=='me'?`<div class="me">${m.html}</div>`:m.role=='ai'?`<div class="ai"><div class="who">Trợ lý AI</div>${m.html}</div>`:m.role=='ph'?`<div class="ph"><div class="who">Dược sĩ Mai (dựng)</div>${m.html}</div>`:`<div class="sys">${m.html}</div>`).join('');
+ $('#chat').scrollTop=1e6;renderQueue();renderStatus();
+ // Các nút của lượt sàng lọc cũ không còn quyền xác nhận hay đặt hàng.
+ $('#chat').querySelectorAll('button').forEach(b=>{
+  const action=b.getAttribute('onclick')||'';
+  if(/^(ans|showProduct|screening|order)\(/.test(action)){
+   b.disabled=productBlocked||!screen||!action.includes("'"+screen.id+"'");
+  }
+ });
+}
+function blockProducts(){productBlocked=true;screen=null;render()}
+// ---------- hàng chờ dược sĩ ----------
+const RANK={'Khẩn':0,'Ưu tiên':1,'Thường':2},PILL={'Khẩn':'p-k','Ưu tiên':'p-u','Thường':'p-t'};
+function enqueue(level,lines){
+ if(cur){
+  // Ca đã bị huỷ chuyển thì mở lại, giữ nguyên mức và tóm tắt cũ để dược sĩ không phải hỏi lại.
+  if(!queue.includes(cur)){cur.start=Date.now();cur.taken=false;queue.push(cur)}
+  if(RANK[level]<RANK[cur.level])cur.level=level;cur.lines.push(...lines);render();return cur}
+ cur={level,lines,start:Date.now(),taken:false};queue.push(cur);render();return cur;
+}
+const fmt=ms=>{const s=Math.floor(ms/1000);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+function renderQueue(){
+ const q=[...queue].sort((a,b)=>RANK[a.level]-RANK[b.level]||a.start-b.start);
+ $('#queue').innerHTML=q.length?q.map(c=>`<div class="case ${c.level=='Khẩn'?'k':''}"><div class="top"><span><span class="pill ${PILL[c.level]}">${c.level}</span> ${c.taken?'· đã nhận':'· đang chờ <span class="timer">'+fmt(Date.now()-c.start)+'</span>'}</span>${c.taken?'':`<button class="btn pri" onclick="take()">Nhận ca</button>`}</div><ul>${c.lines.map(l=>'<li>'+l+'</li>').join('')}</ul></div>`).join(''):'<div class="q-empty">Chưa có ca nào được chuyển. Ca nào AI chuyển sẽ hiện ở đây kèm tóm tắt.</div>';
+}
+function renderStatus(){
+ const s=$('#status');
+ if(cur&&queue.includes(cur)&&!cur.taken){s.className='status show';s.innerHTML=`<span>${N(7)}Đã chuyển dược sĩ trực · <b>${cur.level}</b> · chờ <span class="timer">${fmt(Date.now()-cur.start)}</span></span><button class="btn" onclick="cancelTransfer()">Huỷ chuyển</button>`}
+ else if(cur&&cur.taken){s.className='status show';s.innerHTML='<span>Dược sĩ trực đang trong cuộc chat.</span>'}
+ else{s.className='status';s.innerHTML=''}
+}
+setInterval(()=>{if(queue.some(c=>!c.taken)){renderQueue();renderStatus()}},1000);
+function take(){
+ if(!cur)return;cur.taken=true;
+ push('sys','Dược sĩ trực đã vào cuộc chat lúc '+hhmm()+'.');
+ push('ph',cur.level=='Khẩn'?'Mình là dược sĩ trực, mình đã đọc tin của bạn. Bạn đã gọi 115 hoặc đang trên đường đến cơ sở cấp cứu chưa?':'Mình là dược sĩ trực, mình đã đọc tóm tắt của bạn, bạn không cần kể lại. Mình hỏi thêm một chút nhé.');
+}
+function cancelTransfer(){
+ if(!cur||!queue.includes(cur))return;queue=queue.filter(c=>c!==cur);const child=cur.child;cur.lines.push('Khách đã huỷ chuyển lúc '+hhmm());
+ push('ai','Mình đã huỷ yêu cầu chuyển dược sĩ.'+(child?' Lưu ý: với trẻ nhỏ, mình vẫn không tự gợi ý thuốc hay liều. Khi cần, bạn bấm "Hỏi dược sĩ" để chuyển lại.':'')+`<div class="btns"><button class="btn out" onclick="reTransfer()">Hỏi dược sĩ</button></div>`);
+}
+function reTransfer(){const again=cur&&!queue.includes(cur);if(cur&&queue.includes(cur)){push('sys','Bạn đang trong hàng chờ dược sĩ.');return}enqueue('Thường',[again?'Khách tự yêu cầu chuyển lại dược sĩ lúc '+hhmm():'Khách bấm hỏi dược sĩ lúc '+hhmm()]);push('sys',again?'Đã chuyển lại dược sĩ trực, giữ nguyên tóm tắt và mức ưu tiên cũ.':'Đã chuyển dược sĩ trực.')}
+// ---------- nhận diện (luật mô phỏng thay cho AI) ----------
+const has=(t,list)=>list.filter(w=>strip(t).includes(strip(w)));
+const DANGER=['tức ngực','đau ngực','khó thở','vã mồ hôi','co giật','li bì','lơ mơ','ngất','méo miệng','yếu nửa người','nôn ra máu','sưng môi','tím tái','đau đầu dữ dội'];
+const RX=['kháng sinh','amoxicillin','augmentin','cefuroxim','cephalexin','azithromycin','ciprofloxacin','thuốc huyết áp','amlodipin','metformin','corticoid','prednisolon','thuốc ngủ'];
+const PREG=['bầu','mang thai','có thai','cho con bú'];
+const CHRONIC=['tiểu đường','đái tháo đường','huyết áp','tim mạch','suy thận','bệnh gan','trầm cảm','động kinh','hen suyễn','đang uống thuốc','đang dùng thuốc'];
+const LONG=['không đỡ','chưa đỡ','vẫn đau','vẫn sốt','mạnh hơn','lâu lành','cả tuần'];
+const DOSE=['liều','mấy viên','bao nhiêu viên','nửa viên','uống mấy'];
+const SHOP=['còn hàng','giảm giá','khuyến mãi','chi nhánh','gần mình còn','giá bao nhiêu'];
+const ADULT_MED=['người lớn','của bố','của mẹ','bẻ'];
+function age(t){const m=t.match(/(\d+)\s*(tháng|thang)/i);if(m&&/tuổi|tuoi/i.test(t))return 0;const a=t.match(/(\d+)\s*(tuổi|tuoi)/i);return a?+a[1]:null}
+function isChild(t){const a=age(t);if(a!==null&&a<12)return true;return /(^|[\s,.])(bé|trẻ|cháu|em bé|con mình|con em|con tôi|con nhà)/i.test(t)}
+function who(t){const m=t.toLowerCase().replace('bà bầu','').match(/(^|[\s,.])(bố|mẹ|ông|bà|vợ|chồng)(?=[\s,.]|$)/);return m?m[2]:null}
+function handle(t){
+ screen=null;
+ lastText=t;const d=has(t,DANGER),a=age(t),child=isChild(t);
+ if(d.length){return emergency(t,d.map(x=>`“${x}”`).concat(a!==null?[`“${a} tuổi”`]:[]))}
+ const rx=has(t,RX);
+ if(rx.length)return prescription(t,rx);
+ const special=child||(a!==null&&(a<18||a>=65))||has(t,PREG).length||has(t,CHRONIC).length;
+ if(special)return specialGroup(t,child);
+ if(productBlocked){
+  enqueue('Ưu tiên',[`Khách bổ sung: “${esc(t)}”`]);
+  push('ai','Mình đã bổ sung thông tin vào ca để dược sĩ xem. Trong cuộc chat này, mình vẫn không tự gợi ý thuốc hay liều.');
+  afterExtras(t);return;
+ }
+ if(has(t,LONG).length)return longCase(t);
+ if(has(t,DOSE).length)return doseCase(t);
+ if(has(t,SHOP).length)return shopCase(t);
+ return screening(t);
+}
+function afterExtras(t){
+ if(has(t,SHOP).length)push('ai','Về phần giá, khuyến mãi hoặc còn hàng: mình chưa tra được dữ liệu này nên không trả lời để tránh sai. Dược sĩ hoặc nhân viên sẽ trả lời giúp bạn.');
+ if(strip(t).includes('luu'))consent(t);
+}
+// ---------- các nhánh ----------
+function emergency(t,why){
+ blockProducts();
+ const w=who(t),p=w?w:'người bệnh',a=age(t);
+ const sign=has(t,DANGER).join(' kèm ');
+ const id=push('ai',emHTML(p,sign,why,false,a));
+ enqueue('Khẩn',[`Người dùng thuốc: ${w||'chưa rõ'}${age(t)!==null?', '+age(t)+' tuổi':''}`,`Dấu hiệu: ${sign}`,`Khách hỏi: “${esc(t).slice(0,90)}${t.length>90?'…':''}”`,`AI đã hiện cảnh báo gọi 115 lúc ${hhmm()}`]);
+ cur.emId=id;cur.who=p;cur.sign=sign;cur.why=why;
+ afterExtras(t);
+}
+function emHTML(p,sign,why,corrected,a){
+ if(corrected)return `Cảm ơn bạn đã cho mình biết. Mình đã chuyển bạn cho dược sĩ để xem kỹ hơn. Nếu ${p} có thêm dấu hiệu như khó thở, đau lan ra tay hoặc hàm, ngất: gọi 115 ngay.<div class="nobuy">${N(4)}Đã ghi nhận "Không phải vậy". Mình vẫn không gợi ý sản phẩm trong ca này: báo nhầm chỉ tốn vài phút, còn bỏ sót thì không đảo lại được.</div>`;
+ return `<div class="alert">${N(2)}<h3 style="display:inline">Có thể là cấp cứu</h3>
+ <p style="margin:6px 0">${sign.charAt(0).toUpperCase()+sign.slice(1)} ở ${p}${a!=null?' '+a+' tuổi':''} có thể là dấu hiệu cấp cứu. <b>Bạn hãy gọi 115 ngay hoặc đưa ${p} đến cơ sở cấp cứu gần nhất.</b> Đừng dùng thuốc rồi chờ xem có đỡ không.</p>
+ <button class="btn danger" onclick="call115()">☎ Gọi 115</button>
+ <div class="ev">${N(3)}<b>Vì sao mình nói vậy:</b> bạn nhắn ${why.join(', ')}. Mình là trợ lý AI, không chẩn đoán được, nhưng với các dấu hiệu này thì đi cấp cứu ngay là an toàn nhất.</div></div>
+ <p style="margin:8px 0 0;font-size:13.5px">Mình tạm dừng phần mua hàng. Dược sĩ trực đã được báo (ca Khẩn) và sẽ nhắn bạn ngay trong cuộc chat này.</p>
+ <div class="btns"><button class="btn out" onclick="notThat()">${N(4)}Không phải vậy, ${p} không bị như thế</button></div>`;
+}
+function call115(){push('sys','Bạn đã bấm Gọi 115 lúc '+hhmm()+' (mô phỏng).');if(cur)cur.lines.push('Khách đã bấm Gọi 115 lúc '+hhmm());render()}
+function notThat(){if(!cur||cur.corrected)return;cur.corrected=true;upd(cur.emId,emHTML(cur.who,cur.sign,cur.why,true));cur.level='Ưu tiên';enqueue('Ưu tiên',['Khách bấm "Không phải vậy" lúc '+hhmm()+': cần dược sĩ xem kỹ'])}
+function specialGroup(t,child){
+ blockProducts();const a0=age(t);
+ const adultMed=child&&(has(t,ADULT_MED).length||has(t,DOSE).length);
+ const grp=child?'trẻ nhỏ':(a0!==null&&a0<18)?'người dưới 18 tuổi':has(t,PREG).length?'người đang mang thai hoặc cho con bú':age(t)>=65?'người cao tuổi':'người có bệnh nền hoặc đang dùng thuốc kê đơn';
+ let html='';
+ if(adultMed)html+=`<p style="margin:0 0 6px">${N(5)}<b>Chưa nên cho bé uống thuốc của người lớn, kể cả bẻ nửa viên.</b> Liều cho trẻ phải tính theo cân nặng, bẻ viên người lớn thì không chia chính xác được.</p>`;
+ html+=`<p style="margin:0">${adultMed?'':N(5)}Vì người dùng thuốc là <b>${grp}</b>, mình là trợ lý AI nên không tự gợi ý thuốc hay liều. Mình đang chuyển bạn cho dược sĩ trực (ưu tiên).</p>`;
+ html+=`<div class="nobuy">Không có thẻ sản phẩm trong ca này: ${grp} cần dược sĩ xem trước.</div>`;
+ if(child)html+=`<div class="card"><div class="q">${N(6)}Trong lúc chờ, bé có dấu hiệu nào dưới đây không?</div><div class="chips">${['Co giật','Li bì, khó đánh thức','Khó thở','Nôn liên tục, không uống được'].map(x=>`<button class="chip bad" onclick="childSign('${x}')">${x}</button>`).join('')}<button class="chip" onclick="childSign('')">Không có dấu hiệu nào</button></div><div style="font-size:12.5px;color:var(--mut);margin-top:6px">Gõ sẵn cân nặng của bé để dược sĩ tư vấn nhanh hơn.</div></div>`;
+ push('ai',html);
+ const a=age(t);
+ const c=enqueue('Ưu tiên',[`Người dùng thuốc: ${grp}${a!==null?', '+a+' tuổi':''}`,`Khách hỏi: “${esc(t).slice(0,110)}${t.length>110?'…':''}”`,adultMed?'AI đã trả lời "chưa nên" dùng thuốc người lớn, chưa nói liều':'AI chưa gợi ý sản phẩm, chưa nói liều']);c.child=child;
+ afterExtras(t);
+}
+function childSign(x){
+ if(!x){push('me','Không có dấu hiệu nào');push('ai','Cảm ơn bạn. Dược sĩ sẽ nhắn bạn trong cuộc chat này. Nếu bé xuất hiện một trong các dấu hiệu trên, bạn đưa bé đi khám hoặc gọi 115 ngay, không cần chờ.');if(cur){cur.lines.push('Dấu hiệu nguy hiểm: khách chọn "không có"');render()}return}
+ push('me',x);
+ blockProducts();
+ const id=push('ai',`<div class="alert">${N(2)}<h3 style="display:inline">Cần đưa bé đi ngay</h3><p style="margin:6px 0"><b>Bạn hãy đưa bé đến cơ sở y tế gần nhất hoặc gọi 115 ngay.</b> Không cho bé uống thêm thuốc trong lúc chờ.</p><button class="btn danger" onclick="call115()">☎ Gọi 115</button><div class="ev">${N(3)}<b>Vì sao mình nói vậy:</b> bạn chọn “${x}” ở trẻ đang sốt.</div></div>`);
+ enqueue('Khẩn',[`Dấu hiệu nguy hiểm: “${x}” → AI đã hiện cảnh báo lúc ${hhmm()}`]);
+}
+function prescription(t,rx){
+ blockProducts();
+ push('ai',`${rx[0].charAt(0).toUpperCase()+rx[0].slice(1)} là thuốc kê đơn. Mình không bán và không gợi ý thuốc thay thế qua chat, vì chat không xác minh được đơn của bác sĩ.<br>Bạn có thể:<br>· mang đơn của bác sĩ đến nhà thuốc để dược sĩ bán trực tiếp, hoặc<br>· đi khám lại, vì bệnh tái lại cần bác sĩ xem.
+ <div class="nobuy">${N(9)}Không có nút mua ở đây: AI không được bán thuốc kê đơn.</div><div class="btns"><button class="btn out" onclick="reTransfer()">Hỏi dược sĩ</button></div>`);
+ afterExtras(t);
+}
+function longCase(t){
+ blockProducts();
+ push('ai',`<div class="soft">Bạn đã tự dùng thuốc mà chưa đỡ, nên mình <b>không gợi ý loại mạnh hơn</b>. Bạn nên đi khám để bác sĩ tìm nguyên nhân. Mình chuyển bạn cho dược sĩ trực để xem thuốc bạn đã dùng.</div>`);
+ enqueue('Thường',[`Khách hỏi: “${esc(t).slice(0,110)}”`,'Đã tự dùng thuốc chưa đỡ · AI đã khuyên đi khám, không gợi ý thuốc mạnh hơn']);
+ afterExtras(t);
+}
+function doseCase(t){
+ blockProducts();
+ push('ai',`Mình là trợ lý AI nên không tư vấn liều. Liều dùng ghi trên nhãn sản phẩm; nếu cần điều chỉnh theo người dùng, dược sĩ sẽ tư vấn. Mình chuyển bạn cho dược sĩ trực nhé.`);
+ enqueue('Thường',[`Khách hỏi liều: “${esc(t).slice(0,110)}”`]);afterExtras(t);
+}
+function shopCase(t){
+ push('ai',`Mình chưa kiểm tra được tồn kho hay giá ở từng cửa hàng, nên không dám nói "còn hàng" để bạn đi mất công. Bạn muốn mình chuyển nhân viên kiểm tra giúp không?<div class="btns"><button class="btn out" onclick="reTransfer()">Nhờ nhân viên kiểm tra</button></div>`);
+ if(strip(t).includes('luu'))consent(t);
+}
+function consent(t){
+ const note=esc(t).slice(0,80),cid='c'+(++seq);
+ push('ai',`<div class="card">${N(10)}<b>Bạn muốn lưu ghi chú sức khoẻ này không?</b><div class="ev">Sẽ lưu: “${note}${t.length>80?'…':''}”<br>Ai xem được: dược sĩ của Nhà thuốc Mẫu khi bạn hỏi lần sau.<br>Xoá: Tài khoản → Ghi chú sức khoẻ → Xoá.</div><div class="btns"><button class="btn pri" onclick="saveNote('${cid}',true)">Đồng ý lưu</button><button class="btn" onclick="saveNote('${cid}',false)">Không lưu</button></div></div>`,cid);
+}
+function saveNote(id,ok){upd(id,ok?'Đã lưu ghi chú. Bạn xoá được bất cứ lúc nào trong Tài khoản → Ghi chú sức khoẻ.':'Mình không lưu gì cả.');}
+// ---------- ca bình thường: sàng lọc → khách xác nhận → gợi ý ----------
+const QS=[['who','Người dùng thuốc là ai?',['Mình (18–64 tuổi)','Người khác, 18–64 tuổi','Dưới 18 tuổi','Từ 65 tuổi trở lên']],['preg','Đang mang thai hoặc cho con bú?',['Không','Có']],['risk','Có dị ứng thuốc, bệnh nền, hoặc đang dùng thuốc khác?',['Không','Có']],['long','Đã tự dùng thuốc cho triệu chứng này mà chưa đỡ?',['Không','Có']],['red','Có sốt cao, khó thở, khó nuốt nước bọt?',['Không','Có']]];
+function screening(t,previousId){
+ if(productBlocked||(previousId&&(!screen||previousId!==screen.id)))return;
+ screen={t,ans:{},id:'s'+(++seq)};
+ push('ai','Mình hỏi nhanh 5 câu để chắc thuốc hợp với người dùng, bấm là xong.');
+ push('ai',screenHTML(),screen.id);
+}
+function screenHTML(){
+ const a=screen.ans;let h=`<div class="card">`;
+ for(const [k,q,opts] of QS)h+=`<div class="row"><div class="q">${q}</div><div class="chips">${opts.map(o=>`<button class="chip ${a[k]==o?'sel':''}" onclick="ans('${k}','${o}','${screen.id}')">${o}</button>`).join('')}</div></div>`;
+ return h+'</div>';
+}
+function ans(k,o,id){
+ if(productBlocked||!screen||screen.id!==id||screen.done)return;
+ screen.ans[k]=o;upd(screen.id,screenHTML());
+ const a=screen.ans,t=screen.t;
+ if(a.red=='Có'){blockProducts();push('ai',`<div class="alert">${N(2)}<h3 style="display:inline">Bạn nên đi khám ngay</h3><p style="margin:6px 0">Sốt cao, khó thở hoặc khó nuốt nước bọt cần bác sĩ xem. Nếu khó thở nặng lên, gọi 115.</p><div class="ev">${N(3)}<b>Vì sao:</b> bạn trả lời “Có” ở câu sốt cao, khó thở, khó nuốt.</div></div>`);enqueue('Khẩn',['Sàng lọc: có sốt cao / khó thở / khó nuốt',`Khách hỏi: “${esc(t)}”`]);return}
+ if(Object.keys(a).length<QS.length)return;
+ screen.done=true;
+ if(!a.who.includes('18–64')||a.preg=='Có'||a.risk=='Có'){blockProducts();push('ai',`${N(5)}Với thông tin bạn chọn, mình không tự gợi ý thuốc. Mình chuyển bạn cho dược sĩ trực (ưu tiên) kèm câu trả lời của bạn, bạn không phải kể lại.`);enqueue('Ưu tiên',[`Sàng lọc: ${a.who} · mang thai/cho bú: ${a.preg} · dị ứng/bệnh nền/thuốc khác: ${a.risk} · đã tự dùng thuốc chưa đỡ: ${a.long}`,`Khách hỏi: “${esc(t)}”`]);return}
+ if(a.long=='Có'){blockProducts();push('ai',`<div class="soft">Bạn đã tự dùng thuốc mà chưa đỡ, nên mình <b>không gợi ý thêm thuốc</b>. Bạn nên đi khám để bác sĩ tìm nguyên nhân. Mình chuyển bạn cho dược sĩ trực để xem thuốc bạn đã dùng.</div>`);enqueue('Thường',['Sàng lọc: đã tự dùng thuốc chưa đỡ · AI đã khuyên đi khám, không gợi ý thêm thuốc',`Khách hỏi: “${esc(t)}”`]);return}
+ screen.eligible=true;
+ push('ai',confirmHTML());
+}
+function confirmHTML(){
+ const a=screen.ans;
+ return `<div class="card">${N(8)}<b>Mình dựa vào thông tin bạn xác nhận:</b><ul style="margin:6px 0;padding-left:18px;font-size:13.5px"><li>Người dùng thuốc: ${a.who.toLowerCase()}</li><li>Không mang thai, không cho con bú</li><li>Không dị ứng thuốc, không bệnh nền, không dùng thuốc khác</li><li>Chưa tự dùng thuốc mà không đỡ</li><li>Không sốt cao, không khó thở, không khó nuốt</li><li>Triệu chứng: “${esc(screen.t).slice(0,60)}”</li></ul><div style="font-size:12.5px;color:var(--mut)">Đúng hết thì mình gợi ý một sản phẩm không kê đơn. Sai chỗ nào thì sửa lại.</div><div class="btns"><button class="btn pri" onclick="showProduct('${screen.id}')">Đúng, xem gợi ý</button><button class="btn" onclick="screening(screen.t,'${screen.id}')">Sửa lại</button></div></div>`;
+}
+function product(t){const s=strip(t);if(s.includes('hong'))return 'Viên ngậm dịu họng (sản phẩm dựng)';if(s.includes('mui'))return 'Nước muối sinh lý xịt mũi (sản phẩm dựng)';if(s.includes('dau dau')||s.includes('sot'))return 'Thuốc giảm đau, hạ sốt không kê đơn (sản phẩm dựng)';return 'Sản phẩm không kê đơn phù hợp (dựng)'}
+function canSuggest(id){return !productBlocked&&screen&&screen.id===id&&screen.eligible}
+function showProduct(id){
+ if(!canSuggest(id)||screen.confirmed)return;
+ screen.confirmed=true;
+ push('ai',`<div class="card"><b>${product(screen.t)}</b> · thuốc không kê đơn<div class="ev">Cách dùng: theo nhãn sản phẩm. Mình không tư vấn liều.<br>Nếu sau 3 ngày không đỡ, sốt cao hoặc khó nuốt: đi khám.</div><div class="btns"><button class="btn pri" onclick="order('${screen.id}')">Đặt giao</button><button class="btn out" onclick="reTransfer()">Hỏi dược sĩ trước</button></div></div>`);
+}
+function order(id){if(!canSuggest(id)||!screen.confirmed)return;const oid='o'+(++seq);push('sys',`Đã đặt đơn (mô phỏng). Bạn huỷ được trước khi đơn giao. <button class="btn" onclick="upd('${oid}','Đã huỷ đơn.')">Huỷ đơn</button>`,oid);}
+// ---------- điều khiển ----------
+function reset(){msgs=[];queue=[];cur=null;screen=null;lastText='';productBlocked=false;render()}
+function runPreset(k){
+ document.querySelectorAll('.presets button').forEach(b=>b.classList.toggle('on',b.dataset.k==k));
+ reset();
+ if(k=='free'){push('sys','Gõ một ca lạ vào ô chat bên dưới. Prototype sẽ đi theo cùng luật và mức tự chủ như các ca có sẵn.');$('#txt').focus();return}
+ push('me',esc(PRESET[k]));handle(PRESET[k]);
+}
+document.querySelectorAll('.presets button').forEach(b=>b.onclick=()=>runPreset(b.dataset.k));
+$('#form').onsubmit=e=>{e.preventDefault();const t=$('#txt').value.trim();if(!t)return;$('#txt').value='';push('me',esc(t));handle(t)};
+$('#annT').onchange=e=>document.body.classList.toggle('hide-n',!e.target.checked);
+runPreset((location.hash||'#k9').slice(1) in PRESET?(location.hash||'#k9').slice(1):'k9');
+</script>
+</body></html>
